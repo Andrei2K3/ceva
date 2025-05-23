@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8">
+  <title>Rezervările Mele</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <style>
+    .container {
+      max-width: 800px;
+      margin: 40px auto;
+      background-color: #fff;
+      padding: 2rem;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+    }
+
+    th, td {
+      border: 1px solid #ccc;
+      padding: 0.5rem;
+      text-align: left;
+    }
+
+    th {
+      background-color: #f4f4f4;
+    }
+
+    .flash {
+      color: red;
+      text-align: center;
+      margin-bottom: 1rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Rezervările Tale</h1>
+
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        {% for message in messages %}
+          <div class="flash">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <table>
+      <tr>
+        <th>Hotel</th>
+        <th>Camera</th>
+        <th>Check-in</th>
+        <th>Check-out</th>
+        <th>Status</th>
+        <th>Acțiuni</th>
+      </tr>
+      {% for b in bookings %}
+        {% set camera = rooms | selectattr('id', 'equalto', b.room_id) | list | first %}
+        {% set hotel = hotels | selectattr('id', 'equalto', camera.hotel_id) | list | first if camera else None %}
+        <tr>
+          <td>
+            {{ hotel.nume if hotel else '?' }}<br>
+            <small>{{ hotel.locatie if hotel else '' }}</small>
+          </td>
+          <td>
+            {{ camera.numar if camera else '?' }}<br>
+            <small>{{ camera.tip if camera else '' }}</small>
+          </td>
+          <td>{{ b.checkin }}</td>
+          <td>{{ b.checkout }}</td>
+          <td>{{ b.status }}</td>
+          <td>
+            {% if b.status == 'confirmata' %}
+              <a href="{{ url_for('pay_booking', booking_id=b.id) }}">💳 Plătește</a>
+              <a href="{{ url_for('cancel_booking', booking_id=b.id) }}" style="color: red;">❌ Anulează</a>
+            {% elif b.status == 'neconfirmata' %}
+              <a href="{{ url_for('cancel_booking', booking_id=b.id) }}" style="color: red;">❌ Anulează</a>
+            {% else %}
+              <span style="color: gray;">Nicio acțiune disponibilă</span>
+            {% endif %}
+          </td>
+        </tr>
+      {% endfor %}
+    </table>
+
+    <div style="margin-top: 1.5rem; text-align: center;">
+      <a href="{{ url_for('home') }}" class="green-button" style="background-color: #ccc; color: black;">⬅️ Înapoi la homepage</a>
+    </div>
+  </div>
+</body>
+</html>

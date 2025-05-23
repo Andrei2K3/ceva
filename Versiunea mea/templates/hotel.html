@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8">
+  <title>{{ hotel.nume }}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <style>
+    .container {
+      max-width: 800px;
+      margin: 40px auto;
+      padding: 2rem;
+      background-color: #fff;
+      border-radius: 12px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+    }
+
+    h1, h2 {
+      text-align: center;
+      color: #333;
+    }
+
+    .room {
+      padding: 1rem;
+      border-bottom: 1px solid #ddd;
+    }
+
+    .review {
+      background: #f9f9f9;
+      margin-bottom: 1rem;
+      padding: 1rem;
+      border-left: 4px solid #4CAF50;
+      border-radius: 8px;
+    }
+
+    .flash {
+      color: red;
+      text-align: center;
+      margin-bottom: 1rem;
+    }
+
+    textarea {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      resize: vertical;
+    }
+
+    .green-button {
+      margin-top: 1rem;
+      background-color: #4CAF50;
+      color: white;
+      padding: 0.7rem 1.5rem;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .green-button:hover {
+      background-color: #45a049;
+    }
+
+    .back-link {
+      text-align: center;
+      margin-top: 2rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>{{ hotel.nume }}</h1>
+    <p><strong>Locație:</strong> {{ hotel.locatie }}</p>
+
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        {% for message in messages %}
+          <div class="flash">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <h2>Camere disponibile</h2>
+    {% for room in rooms %}
+      <div class="room">
+        <p><strong>Număr:</strong> {{ room.numar }}<br>
+           <strong>Tip:</strong> {{ room.tip }}<br>
+           <strong>Preț:</strong> {{ room.pret }} RON</p>
+        <a href="{{ url_for('book', room_id=room.id) }}">🛎️ Rezervă</a>
+      </div>
+    {% endfor %}
+
+    <h2>Recenzii</h2>
+    {% if reviews %}
+      {% for review in reviews %}
+        <div class="review">
+          <p><strong>{{ review.user }}</strong> spune:</p>
+          <p>{{ review.text }}</p>
+        </div>
+      {% endfor %}
+    {% else %}
+      <p>Acest hotel nu are recenzii încă.</p>
+    {% endif %}
+
+    {% if session.user %}
+      <h2>Lasă o recenzie</h2>
+      <form method="post" action="{{ url_for('add_review', hotel_id=hotel.id) }}">
+        <textarea name="text" rows="4" placeholder="Scrie recenzia ta..." required></textarea>
+        <button type="submit" class="green-button">➕ Trimite Recenzia</button>
+      </form>
+    {% else %}
+      <p style="text-align: center;">Trebuie să fii autentificat pentru a lăsa o recenzie.</p>
+    {% endif %}
+
+    <div class="back-link">
+      <a href="{{ url_for('home') }}">⬅️ Înapoi la hoteluri</a>
+    </div>
+  </div>
+</body>
+</html>

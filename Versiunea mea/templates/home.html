@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8">
+  <title>Hoteluri disponibile</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <style>
+    .container {
+      width: 100%;
+      max-width: 800px;
+      margin: auto;
+      margin-top: 40px;
+    }
+
+    .hotel {
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      padding: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .topbar {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .topbar a {
+      margin: 0 10px;
+      text-decoration: none;
+      color: #4CAF50;
+      font-weight: bold;
+    }
+
+    .topbar .role {
+      font-weight: normal;
+      font-size: 0.95rem;
+      color: #666;
+      margin-left: 10px;
+    }
+
+    .admin-link {
+      display: block;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .admin-link a {
+      color: #d35400;
+      font-weight: bold;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="topbar">
+      {% if session.user %}
+        Salut, {{ session.user.username }} 
+        <span class="role">| Rol: {{ session.user.role }}</span> |
+        <a href="{{ url_for('my_bookings') }}">Rezervările mele</a> | 
+        <a href="{{ url_for('logout') }}">Logout</a>
+      {% else %}
+        <a href="{{ url_for('login') }}">Login</a> | 
+        <a href="{{ url_for('register') }}">Register</a>
+      {% endif %}
+    </div>
+
+    {% if session.user and session.user.role == 'admin' %}
+      <div class="admin-link">
+        <a href="{{ url_for('admin_panel') }}">🛠️ Intra în Panoul Administratorului</a>
+      </div>
+    {% endif %}
+
+    {% if session.user and session.user.role == 'angajat' %}
+      <div class="admin-link">
+        <a href="{{ url_for('staff_panel') }}">🏨 Panou Angajat</a>
+      </div>
+    {% endif %}
+
+    <h1>Hoteluri disponibile</h1>
+    {% for hotel in hotels %}
+      <div class="hotel">
+        <h3>{{ hotel.nume }}</h3>
+        <p>Locație: {{ hotel.locatie }}</p>
+        <a href="{{ url_for('hotel_detail', hotel_id=hotel.id) }}">Vezi camere</a>
+      </div>
+    {% endfor %}
+  </div>
+</body>
+</html>

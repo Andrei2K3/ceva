@@ -1,0 +1,178 @@
+[
+    {
+        "id": 1,
+        "user": "admin",
+        "room_id": 1,
+        "checkin": "2025-05-26",
+        "checkout": "2025-05-19",
+        "status": "respinsa"
+    },
+    {
+        "id": 2,
+        "user": "admin",
+        "room_id": 1,
+        "checkin": "2025-05-14",
+        "checkout": "2025-05-25",
+        "status": "respinsa"
+    },
+    {
+        "id": 3,
+        "user": "admin",
+        "room_id": 1,
+        "checkin": "2025-05-19",
+        "checkout": "2025-05-27",
+        "status": "respinsa"
+    },
+    {
+        "id": 4,
+        "user": "admin",
+        "room_id": 1,
+        "checkin": "2025-05-20",
+        "checkout": "2025-05-26",
+        "status": "respinsa"
+    },
+    {
+        "id": 5,
+        "user": "admin",
+        "room_id": 3,
+        "checkin": "2025-05-20",
+        "checkout": "2025-05-23",
+        "status": "respinsa"
+    },
+    {
+        "id": 6,
+        "user": "admin",
+        "room_id": 3,
+        "checkin": "2025-05-21",
+        "checkout": "2025-05-27",
+        "status": "respinsa"
+    },
+    {
+        "id": 7,
+        "user": "david",
+        "room_id": 3,
+        "checkin": "2025-05-25",
+        "checkout": "2025-05-27",
+        "status": "platita"
+    },
+    {
+        "id": 9,
+        "user": "david",
+        "room_id": 5,
+        "checkin": "2025-05-21",
+        "checkout": "2025-05-29",
+        "status": "respinsa"
+    },
+    {
+        "id": 10,
+        "user": "andrei2",
+        "room_id": 6,
+        "checkin": "2025-05-12",
+        "checkout": "2025-06-03",
+        "status": "platita"
+    },
+    {
+        "id": 11,
+        "user": "andrei3",
+        "room_id": 1,
+        "checkin": "2025-05-20",
+        "checkout": "2025-05-26",
+        "status": "platita"
+    },
+    {
+        "id": 12,
+        "user": "andrei3",
+        "room_id": 5,
+        "checkin": "2025-05-28",
+        "checkout": "2025-05-28",
+        "status": "respinsa"
+    },
+    {
+        "id": 13,
+        "user": "andrei3",
+        "room_id": 3,
+        "checkin": "2025-05-13",
+        "checkout": "2025-05-26",
+        "status": "platita"
+    },
+    {
+        "id": 14,
+        "user": "andrei3",
+        "room_id": 5,
+        "checkin": "2025-05-20",
+        "checkout": "2025-05-26",
+        "status": "platita"
+    },
+    {
+        "id": 15,
+        "user": "andrei2",
+        "room_id": 7,
+        "checkin": "2025-05-07",
+        "checkout": "2025-05-25",
+        "status": "respinsa"
+    },
+    {
+        "id": 16,
+        "user": "andrei3",
+        "room_id": 8,
+        "checkin": "2025-05-26",
+        "checkout": "2025-05-27",
+        "status": "platita"
+    },
+    {
+        "id": 17,
+        "user": "andrei4",
+        "room_id": 8,
+        "checkin": "2025-05-28",
+        "checkout": "2025-05-23",
+        "status": "platita"
+    },
+    {
+        "id": 18,
+        "user": "andrei3",
+        "room_id": 3,
+        "checkin": "2025-05-14",
+        "checkout": "2025-05-26",
+        "status": "confirmata"
+    },
+    {
+        "id": 19,
+        "user": "andrei3",
+        "room_id": 5,
+        "checkin": "2025-05-21",
+        "checkout": "2025-05-20",
+        "status": "confirmata"
+    },
+    {
+        "id": 20,
+        "user": "david",
+        "room_id": 9,
+        "checkin": "2025-05-20",
+        "checkout": "2025-05-21",
+        "status": "platita"
+    },
+    {
+        "id": 21,
+        "user": "david",
+        "room_id": 8,
+        "checkin": "2025-05-23",
+        "checkout": "2025-05-27",
+        "status": "platita"
+    },
+    {
+        "id": 22,
+        "user": "david",
+        "room_id": 8,
+        "checkin": "2025-05-26",
+        "checkout": "2025-05-29",
+        "status": "platita"
+    },
+    {
+        "id": 23,
+        "user": "andrei4",
+        "room_id": 8,
+        "checkin": "2025-06-03",
+        "checkout": "2025-06-19",
+        "status": "platita"
+    }
+]

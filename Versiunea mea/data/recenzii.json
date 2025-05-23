@@ -1,0 +1,38 @@
+[
+    {
+        "id": 1,
+        "hotel_id": 2,
+        "user": "andrei3",
+        "text": "Salut"
+    },
+    {
+        "id": 2,
+        "hotel_id": 2,
+        "user": "andrei3",
+        "text": "nu mi a placut\r\n"
+    },
+    {
+        "id": 3,
+        "hotel_id": 1,
+        "user": "andrei2",
+        "text": "sada"
+    },
+    {
+        "id": 4,
+        "hotel_id": 4,
+        "user": "david",
+        "text": "sdfd"
+    },
+    {
+        "id": 5,
+        "hotel_id": 3,
+        "user": "david",
+        "text": "d"
+    },
+    {
+        "id": 6,
+        "hotel_id": 3,
+        "user": "andrei4",
+        "text": "sadasd"
+    }
+]

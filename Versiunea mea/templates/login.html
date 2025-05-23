@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8">
+  <title>Autentificare</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <div class="auth-wrapper">
+    <div class="auth-card">
+      <h1>Autentificare</h1>
+      {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        {% for message in messages %}
+          <div class="flash">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
+      {% endwith %}    
+      <form method="post">
+        <input type="text" name="username" placeholder="Nume utilizator" required>
+        <input type="password" name="password" placeholder="Parolă" required>
+        <button type="submit">🔐 Intră în cont</button>
+      </form>
+      <a href="{{ url_for('register') }}">Nu ai cont? Creează unul</a>
+    </div>
+  </div>
+</body>
+</html>

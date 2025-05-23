@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8">
+  <title>Rezervare cameră</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <script>
+    window.addEventListener("DOMContentLoaded", () => {
+      const today = new Date().toISOString().split("T")[0];
+      const checkin = document.getElementById("checkin");
+      const checkout = document.getElementById("checkout");
+      checkin.min = today;
+      checkout.min = today;
+
+      checkin.addEventListener("change", () => {
+        checkout.min = checkin.value;
+      });
+    });
+
+    function validateDates() {
+      const checkin = document.getElementById('checkin').value;
+      const checkout = document.getElementById('checkout').value;
+      if (checkin && checkout && checkin >= checkout) {
+        alert("Data de check-out trebuie să fie DUPĂ check-in.");
+        return false;
+      }
+      return true;
+    }
+  </script>
+</head>
+<body>
+  <div class="container">
+    <div class="form-card">
+      <h1>🛎️ Rezervă Camera {{ camera.numar if camera else '#' + room_id }}</h1>
+      {% if hotel %}
+        <p style="text-align: center; font-weight: bold;">Hotel: {{ hotel.nume }} – {{ hotel.locatie }}</p>
+      {% endif %}
+
+      <form method="post" onsubmit="return validateDates();">
+        <label for="checkin">📆 Check-in</label>
+        <input type="date" name="checkin" id="checkin" required>
+
+        <label for="checkout">📅 Check-out</label>
+        <input type="date" name="checkout" id="checkout" required>
+
+        <div style="text-align: center; margin-top: 1.5rem;">
+          <button type="submit" class="green-button" style="margin-right: 1rem;">✅ Rezervă</button>
+          <a href="{{ url_for('home') }}" class="green-button" style="background-color: #ccc; color: black;">⬅️ Înapoi</a>
+        </div>
+      </form>
+    </div>
+  </div>
+</body>
+</html>
