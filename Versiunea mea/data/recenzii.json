@@ -34,5 +34,17 @@
         "hotel_id": 3,
         "user": "andrei4",
         "text": "sadasd"
+    },
+    {
+        "id": 7,
+        "hotel_id": 3,
+        "user": "andrei3",
+        "text": "fsfd"
+    },
+    {
+        "id": 8,
+        "hotel_id": 3,
+        "user": "andrei3",
+        "text": "ad"
     }
 ]

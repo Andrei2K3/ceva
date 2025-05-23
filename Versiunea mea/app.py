@@ -5,6 +5,13 @@ from flask import Response
 from io import StringIO
 import csv
 
+from datetime import datetime
+
+
+from io import BytesIO
+from reportlab.pdfgen import canvas
+from reportlab.lib.pagesizes import A4
+
 app = Flask(__name__)
 app.secret_key = 'supersecretkey'
 
@@ -14,6 +21,7 @@ HOTELS_FILE = os.path.join(DATA_DIR, 'hoteluri.json')
 ROOMS_FILE = os.path.join(DATA_DIR, 'camere.json')
 BOOKINGS_FILE = os.path.join(DATA_DIR, 'rezervari.json')
 REVIEWS_FILE = os.path.join(DATA_DIR, 'recenzii.json')
+RECLAME_FILE = os.path.join(DATA_DIR, 'reclame.json')
 
 # Helper functions
 def load_json(path):
@@ -36,7 +44,9 @@ def current_user():
 @app.route('/')
 def home():
     hotels = load_json(HOTELS_FILE)
-    return render_template('home.html', hotels=hotels)
+    reclame = load_json(RECLAME_FILE)  # ✅ încarcă reclamele
+    return render_template('home.html', hotels=hotels, reclame=reclame)
+
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -73,6 +83,68 @@ def logout():
     session.pop('user', None)
     return redirect(url_for('home'))
 
+@app.route('/search')
+def search_rooms():
+    locatie = request.args.get('locatie')
+    checkin = request.args.get('checkin')
+    checkout = request.args.get('checkout')
+
+    hotels = load_json(HOTELS_FILE)
+    rooms = load_json(ROOMS_FILE)
+    bookings = load_json(BOOKINGS_FILE)
+
+    # Găsește hotelurile din acea locație
+    hoteluri_gasite = [h for h in hotels if locatie.lower() in h['locatie'].lower()]
+
+    camere_disponibile = []
+    for hotel in hoteluri_gasite:
+        for room in rooms:
+            if room['hotel_id'] == hotel['id']:
+                ocupata = any(
+                    b['room_id'] == room['id'] and b['status'] in ['neconfirmata', 'confirmata', 'platita'] and
+                    not (checkout <= b['checkin'] or checkin >= b['checkout'])
+                    for b in bookings
+                )
+                if not ocupata:
+                    camere_disponibile.append({'camera': room, 'hotel': hotel})
+
+    return render_template('search_results.html', camere=camere_disponibile, checkin=checkin, checkout=checkout)
+
+@app.route('/rezerva-direct/<int:room_id>', methods=['POST'])
+def rezerva_direct(room_id):
+    if 'user' not in session:
+        return redirect(url_for('login'))
+
+    checkin = request.form['checkin']
+    checkout = request.form['checkout']
+
+    if checkin >= checkout:
+        flash("Data de check-out trebuie să fie DUPĂ check-in.")
+        return redirect(url_for('home'))
+
+    bookings = load_json(BOOKINGS_FILE)
+
+    # Verifică suprapunere
+    for b in bookings:
+        if b['room_id'] == room_id and b['status'] in ['neconfirmata', 'confirmata', 'platita']:
+            if not (checkout <= b['checkin'] or checkin >= b['checkout']):
+                flash("Camera selectată este deja rezervată în perioada aleasă.")
+                return redirect(url_for('home'))
+
+    new_id = max((b['id'] for b in bookings), default=0) + 1
+    new_booking = {
+        'id': new_id,
+        'user': session['user']['username'],
+        'room_id': room_id,
+        'checkin': checkin,
+        'checkout': checkout,
+        'status': 'neconfirmata'
+    }
+    bookings.append(new_booking)
+    save_json(BOOKINGS_FILE, bookings)
+    flash('Rezervarea a fost înregistrată direct.')
+    return redirect(url_for('my_bookings'))
+
 @app.route('/admin')
 def admin_panel():
     user = current_user()
@@ -89,10 +161,20 @@ def staff_panel():
     user = current_user()
     if not user or user['role'] != 'angajat':
         return redirect(url_for('login'))
+
     hotels = load_json(HOTELS_FILE)
     rooms = load_json(ROOMS_FILE)
     bookings = load_json(BOOKINGS_FILE)
+
+    # Adaugă hotel_nume și camera_numar fiecărei rezervări
+    for b in bookings:
+        room = next((r for r in rooms if r['id'] == b['room_id']), None)
+        hotel = next((h for h in hotels if h['id'] == room['hotel_id']), None) if room else None
+        b['hotel_nume'] = hotel['nume'] if hotel else 'necunoscut'
+        b['camera_numar'] = room['numar'] if room else 'necunoscut'
+
     return render_template('staff_panel.html', hotels=hotels, rooms=rooms, bookings=bookings)
+
 
 @app.route('/staff/add-hotel', methods=['POST'])
 def staff_add_hotel():
@@ -231,22 +313,58 @@ def pay_booking(booking_id):
         return redirect(url_for('login'))
 
     bookings = load_json(BOOKINGS_FILE)
+    rooms = load_json(ROOMS_FILE)
+    hotels = load_json(HOTELS_FILE)
     updated = False
 
-    for b in bookings:
-        if b['id'] == booking_id and b['user'] == session['user']['username']:
-            if b['status'] == 'confirmata':
-                b['status'] = 'platita'
-                updated = True
-            break
+    user = session['user']['username']
+    booking = next((b for b in bookings if b['id'] == booking_id and b['user'] == user), None)
 
-    if updated:
-        save_json(BOOKINGS_FILE, bookings)
-        flash("Rezervarea a fost plătită cu succes.")
-    else:
+    if not booking or booking['status'] != 'confirmata':
         flash("Nu se poate plăti această rezervare.")
+        return redirect(url_for('my_bookings'))
 
-    return redirect(url_for('my_bookings'))
+    # ✅ actualizare status
+    booking['status'] = 'platita'
+    save_json(BOOKINGS_FILE, bookings)
+
+    # 🧾 generare chitanță PDF
+    room = next((r for r in rooms if r['id'] == booking['room_id']), None)
+    hotel = next((h for h in hotels if h['id'] == room['hotel_id']), None) if room else None
+    pret = room['pret']
+    zile = (datetime.strptime(booking['checkout'], '%Y-%m-%d') - datetime.strptime(booking['checkin'], '%Y-%m-%d')).days
+    total = zile * pret
+
+    buffer = BytesIO()
+    c = canvas.Canvas(buffer, pagesize=A4)
+
+    c.setFont("Helvetica-Bold", 14)
+    c.drawString(100, 800, "Chitanta de plata")
+
+    c.setFont("Helvetica", 11)
+    c.drawString(100, 770, f"Client: {booking['user']}")
+    c.drawString(100, 750, f"Hotel: {hotel['nume'] if hotel else 'necunoscut'}")
+    c.drawString(100, 730, f"Camera: {room['numar'] if room else 'necunoscut'}")
+    c.drawString(100, 710, f"Check-in: {booking['checkin']}")
+    c.drawString(100, 690, f"Check-out: {booking['checkout']}")
+    c.drawString(100, 670, f"Pret/noapte: {pret} RON")
+    c.drawString(100, 650, f"Zile: {zile}")
+    c.setFont("Helvetica-Bold", 12)
+    c.drawString(100, 630, f"Total: {total} RON")
+
+    c.setFont("Helvetica-Oblique", 10)
+    c.drawString(100, 600, "Va multumim pentru rezervare si plata !")
+
+    c.showPage()
+    c.save()
+    buffer.seek(0)
+
+    return Response(
+        buffer,
+        mimetype='application/pdf',
+        headers={'Content-Disposition': f'attachment; filename=chitanta_{booking_id}.pdf'}
+    )
+
 
 @app.route('/cancel/<int:booking_id>')
 def cancel_booking(booking_id):
@@ -307,6 +425,74 @@ def export_rezervari():
         headers={'Content-Disposition': 'attachment; filename=rezervari.csv'}
     )
 
+@app.route('/contabil')
+def contabil_panel():
+    if 'user' not in session or session['user']['role'] != 'contabil':
+        return redirect(url_for('login'))
+    return render_template('contabil_panel.html')
+
+@app.route('/contabil/finante')
+def contabil_finante():
+    if 'user' not in session or session['user']['role'] != 'contabil':
+        return redirect(url_for('login'))
+
+    bookings = load_json(BOOKINGS_FILE)
+    rooms = load_json(ROOMS_FILE)
+    hotels = load_json(HOTELS_FILE)
+
+    rezervari = []
+    total = 0
+
+    for b in bookings:
+        if b['status'] == 'platita':
+            room = next((r for r in rooms if r['id'] == b['room_id']), None)
+            hotel = next((h for h in hotels if h['id'] == room['hotel_id']), None) if room else None
+
+            if room:
+                zile = (datetime.strptime(b['checkout'], '%Y-%m-%d') - datetime.strptime(b['checkin'], '%Y-%m-%d')).days
+                suma = zile * room['pret']
+                total += suma
+                rezervari.append({
+                    'user': b['user'],
+                    'hotel': hotel['nume'] if hotel else 'necunoscut',
+                    'room_numar': room['numar'] if room else 'necunoscut',
+                    'checkin': b['checkin'],
+                    'checkout': b['checkout'],
+                    'zile': zile,
+                    'pret': room['pret'] if room else 0,
+                    'total': suma
+                })
+
+    return render_template('finante.html', rezervari=rezervari, total=total)
+
+@app.route('/contabil/reclame', methods=['GET', 'POST'])
+def contabil_reclame():
+    if 'user' not in session or session['user']['role'] != 'contabil':
+        return redirect(url_for('login'))
+
+    if request.method == 'POST':
+        titlu = request.form['titlu']
+        continut = request.form['continut']
+        reclame = load_json(RECLAME_FILE)
+        new_id = max([r['id'] for r in reclame], default=0) + 1
+        reclame.append({'id': new_id, 'titlu': titlu, 'continut': continut})
+        save_json(RECLAME_FILE, reclame)
+        flash("Reclamă adăugată cu succes.")
+        return redirect(url_for('contabil_reclame'))
+
+    reclame = load_json(RECLAME_FILE)
+    return render_template('reclame.html', reclame=reclame)
+
+@app.route('/contabil/reclame/delete/<int:id>')
+def delete_reclama(id):
+    if 'user' not in session or session['user']['role'] != 'contabil':
+        return redirect(url_for('login'))
+
+    reclame = load_json(RECLAME_FILE)
+    reclame = [r for r in reclame if r['id'] != id]
+    save_json(RECLAME_FILE, reclame)
+    flash("Reclamă ștearsă.")
+    return redirect(url_for('contabil_reclame'))
 
 
 if __name__ == '__main__':

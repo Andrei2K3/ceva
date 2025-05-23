@@ -51,6 +51,32 @@
       text-decoration: none;
     }
   </style>
+
+  <script>
+    window.addEventListener("DOMContentLoaded", () => {
+      const today = new Date().toISOString().split("T")[0];
+      const checkin = document.getElementById("checkin");
+      const checkout = document.getElementById("checkout");
+
+      checkin.min = today;
+      checkout.min = today;
+
+      checkin.addEventListener("change", () => {
+        checkout.min = checkin.value;
+      });
+    });
+
+    function validateDates() {
+      const checkin = document.getElementById("checkin").value;
+      const checkout = document.getElementById("checkout").value;
+      if (checkin && checkout && checkout <= checkin) {
+        alert("Data de check-out trebuie să fie DUPĂ check-in.");
+        return false;
+      }
+      return true;
+    }
+  </script>
+
 </head>
 <body>
   <div class="container">
@@ -78,7 +104,47 @@
       </div>
     {% endif %}
 
+    {% if session.user and session.user.role == 'contabil' %}
+    <div class="admin-link">
+      <a href="{{ url_for('contabil_panel') }}">📊 Panou Contabil</a>
+    </div>
+    {% endif %}
+  
     <h1>Hoteluri disponibile</h1>
+
+    {% if reclame %}
+    <div style="margin-bottom: 2rem; border: 2px dashed #ccc; padding: 1rem; background: #fdfdfd;">
+      <h2 style="color: #d35400;">📢 Anunțuri Promoționale</h2>
+      <ul>
+        {% for r in reclame %}
+          <li>
+            <strong>{{ r.titlu }}</strong>: {{ r.continut }}
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+    {% endif %}
+  
+    
+    <form action="{{ url_for('search_rooms') }}" method="get" onsubmit="return validateDates();" style="text-align: center; margin-bottom: 2rem;">
+      <label for="locatie">Locație:</label><br>
+      <input type="text" name="locatie" id="locatie" required style="width: 300px; padding: 0.5rem;"><br><br>
+    
+      <div style="display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap;">
+        <div>
+          <label for="checkin">Check-in:</label><br>
+          <input type="date" name="checkin" id="checkin" required>
+        </div>
+        <div>
+          <label for="checkout">Check-out:</label><br>
+          <input type="date" name="checkout" id="checkout" required>
+        </div>
+      </div>
+    
+      <br>
+      <button type="submit" class="green-button">🔍 Caută camere</button>
+    </form>
+    
     {% for hotel in hotels %}
       <div class="hotel">
         <h3>{{ hotel.nume }}</h3>

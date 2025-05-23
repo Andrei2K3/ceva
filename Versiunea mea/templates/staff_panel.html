@@ -90,6 +90,7 @@
       <tr>
         <th>ID</th>
         <th>Utilizator</th>
+        <th>Hotel</th>
         <th>Cameră</th>
         <th>Check-in</th>
         <th>Check-out</th>
@@ -101,6 +102,7 @@
         <tr>
           <td>{{ b.id }}</td>
           <td>{{ b.user }}</td>
+          <td>{{ b.hotel_nume }}</td>
           <td>{{ camera.numar if camera else 'necunoscută' }}</td>
           <td>{{ b.checkin }}</td>
           <td>{{ b.checkout }}</td>

@@ -53,5 +53,10 @@
         "username": "aaa",
         "password": "9834876dcfb05cb167a5c24953eba58c4ac89b1adf57f28f2f9d09af107ee8f0",
         "role": "client"
+    },
+    {
+        "username": "contabil",
+        "password": "b8182199fa2971a9e82a6d8cdf49af6f434db809100b0ac67fcea7ea84e46bf3",
+        "role": "contabil"
     }
 ]
