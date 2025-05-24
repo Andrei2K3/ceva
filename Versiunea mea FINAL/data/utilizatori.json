@@ -1,0 +1,67 @@
+[
+    {
+        "username": "admin",
+        "password": "8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918",
+        "role": "admin"
+    },
+    {
+        "username": "angajat",
+        "password": "8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918",
+        "role": "angajat"
+    },
+    {
+        "username": "client",
+        "password": "8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918",
+        "role": "client"
+    },
+    {
+        "username": "stefan",
+        "password": "1289eaef66f47fa37c547e2049a8389a3f7d3648d95b1e1c921921407fc11f50",
+        "role": "client"
+    },
+    {
+        "username": "andrei",
+        "password": "29313eed7b0ae19dd31312472e7eb9ede06d1119c05dd74f79f8f90990d4197b",
+        "role": "client"
+    },
+    {
+        "username": "david",
+        "password": "07d046d5fac12b3f82daf5035b9aae86db5adc8275ebfbf05ec83005a4a8ba3e",
+        "role": "angajat"
+    },
+    {
+        "username": "andrei2",
+        "password": "ef71d8568c439cd29e16b15fe8b0a2d239f687681dc91a569185dc0247514668",
+        "role": "client"
+    },
+    {
+        "username": "andrei3",
+        "password": "f9736dc6b045cb6ceef5d55cfc3ac473bdf0a68a1f2d9b0f9ae344a1a651e868",
+        "role": "client"
+    },
+    {
+        "username": "andrei4",
+        "password": "0d50097f4d12bbb148b7a442d240acf784f7466b4af169776e46bee134f0bdd9",
+        "role": "client"
+    },
+    {
+        "username": "asdsd",
+        "password": "01e3f9c39c569b9c0eba926d24dbcac9a8d2c7e5ac1e75945948a7af04a5e053",
+        "role": "client"
+    },
+    {
+        "username": "aaa",
+        "password": "9834876dcfb05cb167a5c24953eba58c4ac89b1adf57f28f2f9d09af107ee8f0",
+        "role": "client"
+    },
+    {
+        "username": "contabil",
+        "password": "b8182199fa2971a9e82a6d8cdf49af6f434db809100b0ac67fcea7ea84e46bf3",
+        "role": "contabil"
+    },
+    {
+        "username": "testt",
+        "password": "822e54d37dd37d83776ed8aac05e4578e8b201d8f3fa366bdc60b75228bc835f",
+        "role": "client"
+    }
+]

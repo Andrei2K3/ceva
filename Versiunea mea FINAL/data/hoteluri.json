@@ -1,0 +1,27 @@
+[
+    {
+        "id": 1,
+        "nume": "Hotel Transilvania",
+        "locatie": "Cluj-Napoca"
+    },
+    {
+        "id": 2,
+        "nume": "Marea Neagra Resort",
+        "locatie": "Constanta"
+    },
+    {
+        "id": 3,
+        "nume": "Hotel RESORT AND SPA",
+        "locatie": "Pitesti"
+    },
+    {
+        "id": 4,
+        "nume": "Perla",
+        "locatie": "Constanta"
+    },
+    {
+        "id": 5,
+        "nume": "Top Select",
+        "locatie": "Brasov"
+    }
+]

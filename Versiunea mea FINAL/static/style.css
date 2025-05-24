@@ -1,0 +1,240 @@
+/* Stil global pentru site */
+body {
+    font-family: Arial, sans-serif;
+    background: linear-gradient(to right, #ece9e6, #ffffff);
+    margin: 0;
+    padding: 0;
+  }
+  
+  /* Container general */
+  .container {
+    max-width: 1000px;
+    margin: 40px auto;
+    padding: 2rem;
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 0 15px rgba(0,0,0,0.1);
+  }
+  
+  /* Titluri */
+  h1, h2 {
+    text-align: center;
+    margin-bottom: 1rem;
+    color: #333;
+  }
+  
+  /* Formulare */
+  form {
+    margin-bottom: 2rem;
+  }
+  
+  /* Etichete si campuri */
+  label {
+    display: block;
+    margin-top: 1rem;
+    font-weight: bold;
+  }
+  
+  input[type="text"],
+  input[type="password"],
+  input[type="number"],
+  select {
+    width: 100%;
+    padding: 0.75rem;
+    margin-top: 0.3rem;
+    margin-bottom: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-sizing: border-box;
+  }
+  
+  /* Card pentru formulare */
+  .form-card {
+    background: #fff;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 0 12px rgba(0,0,0,0.1);
+  }
+  
+  /* Buton verde */
+  .green-button {
+    margin-top: 1.5rem;
+    background-color: #4CAF50;
+    color: white;
+    padding: 0.7rem 1.5rem;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+  }
+  
+  .green-button:hover {
+    background-color: #45a049;
+  }
+  
+  /* Mesaje flash */
+  .flash {
+    color: red;
+    text-align: center;
+    margin-bottom: 1rem;
+  }
+  
+  /* Tabele */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+  }
+  
+  th, td {
+    border: 1px solid #ccc;
+    padding: 0.5rem;
+    text-align: left;
+  }
+  
+  th {
+    background: #eee;
+  }
+  
+  /* Linkuri pentru actiuni */
+  .actions a {
+    margin-right: 0.5rem;
+    text-decoration: none;
+    font-weight: bold;
+  }
+  
+  .confirm {
+    color: green;
+  }
+  
+  .reject {
+    color: red;
+  }
+  
+  a {
+    color: #4CAF50;
+    text-decoration: none;
+  }
+  
+  a:hover {
+    text-decoration: underline;
+  }
+  
+  .auth-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+  
+  .auth-card {
+    background-color: white;
+    padding: 2.5rem;
+    border-radius: 16px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 400px;
+  }
+  
+  .auth-card h1 {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    color: #333;
+  }
+  
+  .auth-card input[type="text"],
+  .auth-card input[type="password"] {
+    width: 100%;
+    padding: 0.75rem;
+    margin-bottom: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+  }
+  
+  .auth-card button {
+    width: 100%;
+    padding: 0.75rem;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+  }
+  
+  .auth-card button:hover {
+    background-color: #45a049;
+  }
+  
+  .auth-card a {
+    display: block;
+    margin-top: 1rem;
+    text-align: center;
+    color: #4CAF50;
+    text-decoration: none;
+  }
+  
+  .auth-card .flash {
+    color: red;
+    text-align: center;
+    margin-bottom: 1rem;
+  }
+  
+  .export-button {
+    display: inline-block;
+    background: linear-gradient(135deg, #1abc9c, #16a085);
+    color: white;
+    padding: 0.9rem 1.7rem;
+    font-weight: bold;
+    font-size: 1.1rem;
+    text-decoration: none;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+    text-align: center;
+  }
+  
+  .export-button:hover {
+    background: linear-gradient(135deg, #16a085, #1abc9c);
+    transform: scale(1.05);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
+  }
+  
+  .flash-container {
+    max-width: 600px;
+    margin: 20px auto;
+    text-align: center;
+  }
+  
+  .flash-message {
+    background-color: #dff0d8;
+    color: #3c763d;
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-weight: bold;
+    font-family: Arial, sans-serif;
+    border: 1px solid #d6e9c6;
+    margin-bottom: 15px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    animation: fadeIn 0.3s ease-in-out;
+  }
+  
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  
+  
+  .red-button {
+    background-color: #e74c3c;
+    color: white;
+    padding: 6px 10px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: bold;
+  }
+  .red-button:hover {
+    background-color: #c0392b;
+  }
+  

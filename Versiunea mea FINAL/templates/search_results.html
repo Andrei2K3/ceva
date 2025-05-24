@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8">
+  <title>Rezultate Cautare</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <div class="container">
+    <h1>Rezultate pentru camere disponibile</h1>
+
+    {% if camere %}
+      {% set grouped = {} %}
+      {% for item in camere %}
+        {% set hotel_id = item.hotel.id %}
+        {% if hotel_id not in grouped %}
+          {% set _ = grouped.update({hotel_id: {'hotel': item.hotel, 'camere': []}}) %}
+        {% endif %}
+        {% set _ = grouped[hotel_id]['camere'].append(item.camera) %}
+      {% endfor %}
+
+      {% for group in grouped.values() %}
+        <div class="form-card">
+          <h2>{{ group.hotel.nume }} – {{ group.hotel.locatie }}</h2>
+          <ul>
+            {% for camera in group.camere %}
+              <li style="margin-bottom: 1rem;">
+                Camera #{{ camera.numar }} ({{ camera.tip }}) – {{ camera.pret }} RON/noapte
+                <form action="{{ url_for('rezerva_direct', room_id=camera.id) }}" method="post" style="display: inline;">
+                  <input type="hidden" name="checkin" value="{{ checkin }}">
+                  <input type="hidden" name="checkout" value="{{ checkout }}">
+                  <button type="submit" class="green-button">📅 Rezerva direct</button>
+                </form>
+              </li>
+            {% endfor %}
+          </ul>
+        </div>
+      {% endfor %}
+    {% else %}
+      <p>Nu s-au gasit camere disponibile pentru perioada aleasa.</p>
+    {% endif %}
+
+    <div style="text-align: center; margin-top: 2rem;">
+      <a href="{{ url_for('home') }}" class="green-button" style="background-color: #ccc; color: black;">⬅ Inapoi</a>
+    </div>
+  </div>
+</body>
+</html>

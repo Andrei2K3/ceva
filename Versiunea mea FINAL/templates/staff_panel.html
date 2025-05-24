@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8">
+  <title>Panou Angajat</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <style>
+    .container {
+      max-width: 1000px;
+      margin: 40px auto;
+      background: #fff;
+      padding: 2rem;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+    }
+    h1, h2 { text-align: center; }
+    form { margin-bottom: 2rem; }
+    label { display: block; margin-top: 1rem; font-weight: bold; }
+    input, select {
+      width: 100%;
+      padding: 0.5rem;
+      margin-bottom: 1rem;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+    }
+    th, td {
+      border: 1px solid #ccc;
+      padding: 0.5rem;
+    }
+    th { background: #eee; }
+    .actions a {
+      margin-right: 0.5rem;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    .confirm { color: green; }
+    .reject { color: red; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Panou Angajat</h1>
+
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <div class="flash-container">
+          {% for msg in messages %}
+            <div class="flash-message">{{ msg }}</div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+
+<!-- Sectiune Adauga Hotel -->
+<div class="form-card">
+    <h2>🏨 Adauga Hotel</h2>
+    <form action="{{ url_for('staff_add_hotel') }}" method="post">
+      <label for="nume">Nume Hotel</label>
+      <input type="text" name="nume" id="nume" required>
+  
+      <label for="locatie">Locatie</label>
+      <input type="text" name="locatie" id="locatie" required>
+  
+      <button type="submit" class="green-button">➕ Adauga Hotel</button>
+    </form>
+  </div>
+  
+  <!-- Sectiune Adauga Camera -->
+  <div class="form-card">
+    <h2>🛏️ Adauga Camera</h2>
+    <form action="{{ url_for('staff_add_room') }}" method="post">
+      <label for="hotel_id">Hotel</label>
+      <select name="hotel_id" id="hotel_id" required>
+        {% for hotel in hotels %}
+          <option value="{{ hotel.id }}">{{ hotel.nume }} (ID {{ hotel.id }})</option>
+        {% endfor %}
+      </select>
+  
+      <label for="numar">Numar</label>
+      <input type="text" name="numar" id="numar" required>
+  
+      <label for="tip">Tip</label>
+      <input type="text" name="tip" id="tip" required>
+  
+      <label for="pret">Pret (RON)</label>
+      <input type="number" name="pret" id="pret" step="0.01" required>
+  
+      <button type="submit" class="green-button">➕ Adauga Camera</button>
+    </form>
+  </div>
+  
+  <!-- Sectiune Hoteluri Existente -->
+  <div class="form-card">
+    <h2>📋 Hoteluri Existente</h2>
+    <table>
+      <tr>
+        <th>ID</th>
+        <th>Nume</th>
+        <th>Locatie</th>
+        <th>Actiuni</th>
+      </tr>
+      {% for hotel in hotels %}
+        <tr>
+          <td>{{ hotel.id }}</td>
+          <td>{{ hotel.nume }}</td>
+          <td>{{ hotel.locatie }}</td>
+          <td>
+            <a href="{{ url_for('delete_hotel', hotel_id=hotel.id) }}"
+              class="red-button"
+              onclick="return confirm('Esti sigur ca vrei sa stergi hotelul {{ hotel.nume }}?');">🗑️ Sterge</a>
+          </td>
+        </tr>
+      {% endfor %}
+    </table>
+  </div>
+
+    <h2>Rezervari</h2>
+    <table>
+      <tr>
+        <th>ID</th>
+        <th>Utilizator</th>
+        <th>Hotel</th>
+        <th>Camera</th>
+        <th>Check-in</th>
+        <th>Check-out</th>
+        <th>Status</th>
+        <th>Actiuni</th>
+      </tr>
+      {% for b in bookings %}
+        {% set camera = rooms | selectattr('id', 'equalto', b.room_id) | list | first %}
+        <tr>
+          <td>{{ b.id }}</td>
+          <td>{{ b.user }}</td>
+          <td>{{ b.hotel_nume }}</td>
+          <td>{{ camera.numar if camera else 'necunoscuta' }}</td>
+          <td>{{ b.checkin }}</td>
+          <td>{{ b.checkout }}</td>
+          <td>{{ b.status }}</td>
+          <td class="actions">
+            {% if b.status == 'neconfirmata' %}
+              <a href="{{ url_for('update_booking', booking_id=b.id, action='confirm') }}" class="confirm">✅</a>
+              <a href="{{ url_for('update_booking', booking_id=b.id, action='reject') }}" class="reject">❌</a>
+            {% else %}
+              -
+            {% endif %}
+          </td>
+        </tr>
+      {% endfor %}
+    </table>
+
+    <div style="text-align: center; margin-top: 2rem;">
+      <a href="{{ url_for('export_rezervari') }}" class="export-button">📄 Exporta rezervari CSV</a>
+    </div>
+
+    <a href="{{ url_for('home') }}">Inapoi la homepage</a>
+  </div>
+</body>
+</html>

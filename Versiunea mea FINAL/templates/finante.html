@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8">
+  <title>Finante</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <div class="container">
+    <h1>📊 Finante - Rezervari Platite</h1>
+    
+    <table>
+        <thead>
+          <tr>
+            <th>Utilizator</th>
+            <th>Hotel</th>
+            <th>Camera</th>
+            <th>Check-in</th>
+            <th>Check-out</th>
+            <th>Zile</th>
+            <th>Pret/noapte</th>
+            <th>Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for r in rezervari %}
+          <tr>
+            <td>{{ r.user }}</td>
+            <td>{{ r.hotel }}</td>
+            <td>{{ r.room_numar }}</td>
+            <td>{{ r.checkin }}</td>
+            <td>{{ r.checkout }}</td>
+            <td>{{ r.zile }}</td>
+            <td>{{ r.pret }}</td>
+            <td>{{ r.total }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      
+    <h2 style="margin-top: 1rem;">Total incasat: {{ total }} RON</h2>
+    <a href="{{ url_for('contabil_panel') }}" class="green-button">⬅ Inapoi</a>
+  </div>
+</body>
+</html>
